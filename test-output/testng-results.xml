@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" total="1" passed="1">
+  <reporter-output>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="8238" started-at="2017-12-14T05:46:13Z" finished-at="2017-12-14T05:46:21Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="8238" started-at="2017-12-14T05:46:13Z" finished-at="2017-12-14T05:46:21Z">
+      <class name="TakeScreenshot.TicketTakeScreenshot">
+        <test-method status="PASS" signature="testGuru99TakeScreenShot()[pri:0, instance:TakeScreenshot.TicketTakeScreenshot@6acdbdf5]" name="testGuru99TakeScreenShot" duration-ms="8220" started-at="2017-12-14T11:16:13Z" finished-at="2017-12-14T11:16:21Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testGuru99TakeScreenShot -->
+      </class> <!-- TakeScreenshot.TicketTakeScreenshot -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
