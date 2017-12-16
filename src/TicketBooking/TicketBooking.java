@@ -3,7 +3,6 @@ package TicketBooking;
 import java.awt.AWTException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
-
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -19,56 +18,48 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.Assert;
+import org.openqa.selenium.support.FindBy;
 import org.testng.SkipException;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
 import reporter.JyperionListener;
 
-//Add listener for pdf report generation
 @Listeners(JyperionListener.class)
 public class TicketBooking extends BaseClass {
 
-	WebDriver driver;
-	//Testcase failed so screen shot generate
-@BeforeTest
-
-	  public void Loginbrowsers() throws AWTException, InterruptedException {
+	TicketBooking() {	
+	};
+@BeforeSuite
+	  public void loginbrowsers() throws AWTException, InterruptedException {
 		  System.setProperty("webdriver.chrome.driver", "src/chromedriver.exe");
 driver=new ChromeDriver();
 driver.manage().window().maximize();
 driver.get("http://newtours.demoaut.com");
-	  }
-	
-	//User should be able to book a return ticket successfully by logging into application
-	@Test(priority=0)
-	  public void LoginValidation() 
-	  {
-		  String Expected="Welcome: Mercury Tours";
-		  String ActualTitle=driver.getTitle();
-		  	if (Expected.equals(ActualTitle)) 
-		  		{
-		  			System.out.println("The titles are same....");
-		  		}
-		  	else 
-		  		{
-		  			throw new SkipException("The titles are not same");
-		  		}
-		  driver.findElement(By.name("userName")).sendKeys("sepusers12");
-		  driver.findElement(By.name("password")).sendKeys("test@123");
-		  driver.findElement(By.name("login")).click();
-		  driver.close();
-	  }	    
-	
-	//Testcase for Validate the credentials of the user on the application
-	@Test (priority=1)
-	  public void BookReturnticket() {
+}
+@Test(priority=0)
+public void loginvalidation(){
+	String Expected="Welcome: Mercury Tours";
+	  String ActualTitle=driver.getTitle();
+	  	if (Expected.equals(ActualTitle)) 
+	  		{
+	  			System.out.println("The titles are same....");
+	  		}
+	  	else 
+	  		{
+	  			throw new SkipException("The titles are not same");
+	  		}
+	  driver.findElement(By.name("userName")).sendKeys("sepusers12");
+	  driver.findElement(By.name("password")).sendKeys("test@123");
+	  driver.findElement(By.name("login")).click();
+}
+	@Test(priority=1)
+	  public void bookReturnticket() {
 	driver.findElement(By.xpath("/html/body/div/table/tbody/tr/td[2]/table/tbody/tr[4]/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/form/table/tbody/tr[4]/td[2]/select/option[6]")).click();
 	driver.findElement(By.xpath("/html/body/div/table/tbody/tr/td[2]/table/tbody/tr[4]/td/table/tbody/tr/td[2]/table/tbody/tr[5]/td/form/table/tbody/tr[10]/td[2]/select/option[3]")).click();
 		  driver.manage().timeouts().implicitlyWait(100, TimeUnit.SECONDS);
@@ -81,20 +72,15 @@ driver.get("http://newtours.demoaut.com");
 		  driver.findElement(By.name("buyFlights")).click();
 		  String Confirmationtext=driver.getTitle();
 		  System.out.println(Confirmationtext);
-		  driver.close();
-		  
+		  driver.close();		  
 	  }
-	
-	
-	//After complete execution send pdf report by email
 	@AfterSuite
 	public void tearDown(){
-		sendPDFReportByGMail("m1031923@mindtree.com", "N1v33n@10", "naveenkumar.sampath@adc.mindtree.com", "Flight Booking Ticket Confirmation Mail", "");
+		sendPDFReportByGMail("m1031923@mindtree.com", "N1v33n@10", "naveenkumar.sampath@mindtree.com", "Flight Booking Ticket Confirmation Mail", "");
 	}
 	
 	private static void sendPDFReportByGMail(String from, String pass, String to, String subject, String body) {
         Properties props = System.getProperties();
-        //String host = "smtp.gmail.com";
         String host = "smtp-mail.outlook.com";
         props.put("mail.smtp.starttls.enable", "true");
         props.put("mail.smtp.host", host);
@@ -107,10 +93,9 @@ driver.get("http://newtours.demoaut.com");
         MimeMessage message = new MimeMessage(session);
 
         try {
-        	//Set from address
             message.setFrom(new InternetAddress(from));
              message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-           //Set subject
+      
             message.setSubject(subject);
             message.setText(body);
           
@@ -125,18 +110,12 @@ driver.get("http://newtours.demoaut.com");
             multipart.addBodyPart(objMessageBodyPart);
 
             objMessageBodyPart = new MimeBodyPart();
-
-            //Set path to the pdf report file
-            String filename = System.getProperty("user.dir")+"\\ticketbooking.pdf"; 
+            String filename = System.getProperty("user.dir")+"\\Default test.pdf"; 
             //Create data source to attach the file in mail
             DataSource source = new FileDataSource(filename);
-            
             objMessageBodyPart.setDataHandler(new DataHandler(source));
-
             objMessageBodyPart.setFileName(filename);
-
             multipart.addBodyPart(objMessageBodyPart);
-
             message.setContent(multipart);
             Transport transport = session.getTransport("smtp");
             transport.connect(host, from, pass);
@@ -151,5 +130,3 @@ driver.get("http://newtours.demoaut.com");
         }
     }
 }
-	
-
